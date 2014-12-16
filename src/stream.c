@@ -828,6 +828,7 @@ uvc_error_t uvc_stream_start(
      * and set up several transfers */
     const struct libusb_interface_descriptor *altsetting;
     const struct libusb_endpoint_descriptor *endpoint;
+    struct libusb_ss_endpoint_companion_descriptor *ep_comp;
     /* The greatest number of bytes that the device might provide, per packet, in this
      * configuration */
     size_t config_bytes_per_packet;
@@ -856,6 +857,11 @@ uvc_error_t uvc_stream_start(
           // wMaxPacketSize: [unused:2 (multiplier-1):3 size:11]
           endpoint_bytes_per_packet = (endpoint_bytes_per_packet & 0x07ff) *
                                       (((endpoint_bytes_per_packet >> 11) & 3) + 1);
+
+          if (libusb_get_ss_endpoint_companion_descriptor(strmh->devh->dev->ctx->usb_ctx,
+                                                          endpoint, &ep_comp) == 0)
+            endpoint_bytes_per_packet *= (ep_comp->bMaxBurst + 1);
+
           break;
         }
       }
