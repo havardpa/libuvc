@@ -182,7 +182,7 @@ void uvc_print_diag(uvc_device_handle_t *devh, FILE *stream) {
           case UVC_VS_FORMAT_FRAME_BASED:
             fprintf(stream,
                 "\t\%s(%d)\n"
-                "\t\t  bits per pixel: %d\n"
+                "\t\t  bits per pixel: %u\n"
                 "\t\t  GUID: ",
                 _uvc_name_for_format_subtype(fmt_desc->bDescriptorSubtype),
                 fmt_desc->bFormatIndex,
@@ -194,8 +194,8 @@ void uvc_print_diag(uvc_device_handle_t *devh, FILE *stream) {
             fprintf(stream, " (%4s)\n", fmt_desc->fourccFormat );
 
             fprintf(stream,
-                "\t\t  default frame: %d\n"
-                "\t\t  aspect ratio: %dx%d\n"
+                "\t\t  default frame: %u\n"
+                "\t\t  aspect ratio: %ux%u\n"
                 "\t\t  interlace flags: %02x\n"
                 "\t\t  copy protect: %02x\n",
                 fmt_desc->bDefaultFrameIndex,
@@ -208,12 +208,12 @@ void uvc_print_diag(uvc_device_handle_t *devh, FILE *stream) {
               uint32_t *interval_ptr;
 
               fprintf(stream,
-                  "\t\t\tFrameDescriptor(%d)\n"
+                  "\t\t\tFrameDescriptor(%u)\n"
                   "\t\t\t  capabilities: %02x\n"
-                  "\t\t\t  size: %dx%d\n"
-                  "\t\t\t  bit rate: %d-%d\n"
-                  "\t\t\t  max frame size: %d\n"
-                  "\t\t\t  default interval: 1/%d\n",
+                  "\t\t\t  size: %ux%u\n"
+                  "\t\t\t  bit rate: %u-%u\n"
+                  "\t\t\t  max frame size: %u\n"
+                  "\t\t\t  default interval: 1/%u\n",
                   frame_desc->bFrameIndex,
                   frame_desc->bmCapabilities,
                   frame_desc->wWidth,
@@ -227,21 +227,21 @@ void uvc_print_diag(uvc_device_handle_t *devh, FILE *stream) {
                      *interval_ptr;
                      ++interval_ptr) {
                   fprintf(stream,
-                      "\t\t\t  interval[%d]: 1/%d\n",
+                      "\t\t\t  interval[%d]: 1/%u\n",
 		      (int) (interval_ptr - frame_desc->intervals),
 		      10000000 / *interval_ptr);
                 }
               } else {
                 fprintf(stream,
-                    "\t\t\t  min interval[%d] = 1/%d\n"
-                    "\t\t\t  max interval[%d] = 1/%d\n",
+                    "\t\t\t  min interval[%u] = 1/%u\n"
+                    "\t\t\t  max interval[%u] = 1/%u\n",
                     frame_desc->dwMinFrameInterval,
                     10000000 / frame_desc->dwMinFrameInterval,
                     frame_desc->dwMaxFrameInterval,
                     10000000 / frame_desc->dwMaxFrameInterval);
                 if (frame_desc->dwFrameIntervalStep)
                   fprintf(stream,
-                      "\t\t\t  interval step[%d] = 1/%d\n",
+                      "\t\t\t  interval step[%u] = 1/%u\n",
                       frame_desc->dwFrameIntervalStep,
                       10000000 / frame_desc->dwFrameIntervalStep);
               }
